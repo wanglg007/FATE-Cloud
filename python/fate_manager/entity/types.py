@@ -234,6 +234,19 @@ class PackageStatus:
     FAILED = 2
     PULLING = 3
 
+    @classmethod
+    def to_str(cls, status: int):
+        if status == cls.PULLING:
+            return "pulling"
+        elif status == cls.NO:
+            return "no"
+        elif status == cls.YES:
+            return "yes"
+        elif status == cls.FAILED:
+            return "failed"
+        else:
+            return "unknown"
+
 
 class DeployStatus:
     UNKNOWN = -1
@@ -248,6 +261,33 @@ class DeployStatus:
     IN_TESTING = 8
     TEST_PASSED = 9
     TEST_FAILED = 10
+
+    def to_str(self, status):
+        if status == DeployStatus.SUCCESS:
+            return 'success'
+        elif status == DeployStatus.LOADING:
+            return 'loading'
+        elif status == DeployStatus.LOADED:
+            return 'loaded'
+        elif status == DeployStatus.LOAD_FAILED:
+            return 'load_failed'
+        elif status == DeployStatus.UNDER_INSTALLATION:
+            return 'under_installation'
+        elif status == DeployStatus.INSTALLING:
+            return 'installing'
+        elif status == DeployStatus.INSTALLED:
+            return 'installed'
+        elif status == DeployStatus.INSTALLED_FAILED:
+            return 'installed_falied'
+        elif status == DeployStatus.IN_TESTING:
+            return 'in_testing'
+        elif status == DeployStatus.TEST_PASSED:
+            return 'test_passed'
+        elif status == DeployStatus.TEST_FAILED:
+            return 'test_failed'
+        return 'unknown'
+
+
 
 
 class ProductType:
@@ -284,3 +324,119 @@ class ToyTestOnlyType:
             return "test success"
         elif status == ToyTestOnlyType.FAILED:
             return "toy test failed"
+
+
+class IsValid:
+    UNKNOWN = -1
+    NO = 0
+    YES = 1
+    ING = 2
+
+
+class ClickType:
+    UNKNOWN = -1
+    CONNECT = 1
+    PREPARE = 2
+    SYSTEM_CHECK = 3
+    ANSIBLE_INSTALL = 4
+    ACQUISITION = 5
+    INSTALL = 6
+    TEST = 7
+
+
+class TestStatus:
+    UNKNOWN = -1
+    WAITING = 0
+    TESTING = 1
+    YES = 2
+    NO = 3
+
+    @staticmethod
+    def to_str(status: int):
+        if status == TestStatus.WAITING:
+            return 'waiting'
+        elif status == TestStatus.TESTING:
+            return 'testing'
+        elif status == TestStatus.YES:
+            return 'yes'
+        elif status == TestStatus.NO:
+            return 'no'
+        else:
+            return 'unknown'
+
+
+class TestItem:
+    UNKNWON = -1
+    POD = 0
+    SINGLE = 1
+    TOY = 2
+    FAST = 3
+    NORMAL = 4
+
+    @staticmethod
+    def to_str(status: int):
+        if status == TestItem.POD:
+            return 'Pod/SVC Status Of Each Component'
+        elif status == TestItem.SINGLE:
+            return 'Single Test'
+        elif status == TestItem.TOY:
+            return 'Toy test'
+        elif status == TestItem.FAST:
+            return 'Minimize Fast Test'
+        elif status == TestItem.NORMAL:
+            return 'Minimize Normal Test'
+        else:
+            return 'default'
+
+
+class ToyTestOnlyTypeRead:
+    UNKNOWN = -1
+    YES = 0
+    NO = 1
+
+
+class SiteRunStatus:
+    UNKNOWN = -1
+    STOPPED = 1
+    RUNNING = 2
+
+
+class ToyTestOnly:
+    UNKNOWN = -1
+    NO_TEST = 0
+    TESTING = 1
+    SUCCESS = 2
+    FAILED = 3
+
+
+class ToyTestOnlyRead:
+    UNKNOWN = -1
+    YES = 0
+    NO = 1
+
+
+class SiteStatus:
+    UNKNOWN = -1
+    NO_JOIN = 1
+    JOINED = 2
+    REMOVED = 3
+
+
+class JobType:
+    UNKNOWN = -1
+    INSTALL = 0
+    UPDATE = 1
+    DELETE = 2
+
+
+class JobStatus:
+    UNKNOWN = -1
+    SUCCESS = 0
+    RUNNING = 1
+    FAILED = 2
+
+
+class ServiceStatus:
+    UNKNOWN = -1
+    UNAVAILABLE = 1
+    AVAILABLE = 2

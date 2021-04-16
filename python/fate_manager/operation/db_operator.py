@@ -73,6 +73,28 @@ class DBOperator:
 
     @classmethod
     @DB.connection_context()
+    def update(cls, entity_model, query_filters, entity_info):
+        instances = entity_model.select().where(**query_filters)
+        if instances:
+            instance = instances[0]
+        else:
+            # raise Exception("can not found the {}".format(entity_model.__class__.__name__))
+            return False
+        update_filters = query_filters[:]
+        update_info = {}
+        update_info.update(entity_info)
+        if update_info.get('end_time'):
+            if instance.start_time:
+                update_info['elapsed'] = update_info['end_time'] - instance.start_time
+            else:
+                update_info.pop('end_time')
+        cls.execute_update(old_obj=instance, model=entity_model,
+                           update_info=update_info,
+                           update_filters=update_filters)
+        return True
+
+    @classmethod
+    @DB.connection_context()
     def safe_save(cls, entity_model, entity_info):
         primary_keys = entity_model.get_primary_keys_name()
         filters = []
@@ -144,5 +166,9 @@ class DBOperator:
             elif reverse is False:
                 instances = instances.order_by(getattr(entity_model, f"{order_by}").asc())
         return [instance for instance in instances]
+
+    @classmethod
+    def query_with_raw_sql(cls, sql):
+        return DB.execute_sql(sql)
 
 

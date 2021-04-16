@@ -76,6 +76,14 @@ CLOUD_URL= {
     "ExchangeUri": "/cloud-manager/api/exchange/exchange/page/fatemanager"
 }
 
+
+DEPLOY_SETTINGS = {
+    "HYPERION_NODE": [],
+    "EXCHANGE_IP": "",
+    "EXCHANGE_PORT": 0,
+    "SESSION_PROCESSOR_PER_NODE": 2
+}
+
 CLOUD_SITE_SIGNATURE = ["CheckUri", "ActivateUri", "SiteQueryUri", "FederationUri", "UpdateVersionUri", "IpAcceptUri",
                         "CheckAuthorityUri", "IpQueryUri", "SystemHeartUri"]
 CLOUD_INSTITUTION_SIGNATURE = ["UserActivateUri", "FunctionAllUri", "ApprovedUri", "OtherSiteUri", "ExchangeUri",
@@ -84,3 +92,6 @@ CLOUD_INSTITUTION_SIGNATURE = ["UserActivateUri", "FunctionAllUri", "ApprovedUri
 # user token
 EXPIRE_TIME = 30 * 60 * 60 * 1000  # ms
 
+# TEST
+TEST_PARTY_ID = 10000
+WORK_MODE = 1

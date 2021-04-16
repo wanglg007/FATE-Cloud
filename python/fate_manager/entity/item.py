@@ -1,4 +1,9 @@
 class BaseItem(object):
+    def __init__(self, **kwargs):
+        for k, v in kwargs.items():
+            if hasattr(self, k):
+                setattr(self, k, v)
+
     def to_dict(self, need_none=False):
         d = {}
         for k, v in self.__dict__.items():
@@ -12,9 +17,7 @@ class IdPair(BaseItem):
     def __init__(self, **kwargs):
         self.code = None
         self.desc = None
-        for k, v in kwargs.items():
-            if hasattr(self, k):
-                setattr(self, k, v)
+        super(IdPair, self).__init__(**kwargs)
 
 
 class AuditPair(BaseItem):
@@ -22,18 +25,14 @@ class AuditPair(BaseItem):
         self.code = None
         self.desc = None
         self.readCode = None
-        for k, v in kwargs.items():
-            if hasattr(self, k):
-                setattr(self, k, v)
+        super(AuditPair, self).__init__(**kwargs)
 
 
 class Role(BaseItem):
     def __init__(self, **kwargs):
         self.roleId = None
         self.roleName = None
-        for k, v in kwargs.items():
-            if hasattr(self, k):
-                setattr(self, k, v)
+        super(Role, self).__init__(**kwargs)
 
 
 class SitePair(BaseItem):
@@ -41,9 +40,7 @@ class SitePair(BaseItem):
         self.partyId = None
         self.siteName = None
         self.institution = None
-        for k, v in kwargs.items():
-            if hasattr(self, k):
-                setattr(self, k, v)
+        super(SitePair, self).__init__(**kwargs)
 
 
 class FederatedItem(BaseItem):
@@ -55,9 +52,7 @@ class FederatedItem(BaseItem):
         self.size = None
         self.siteList = []
         self.createTime = None
-        for k, v in kwargs.items():
-            if hasattr(self, k):
-                setattr(self, k, v)
+        super(FederatedItem, self).__init__(**kwargs)
 
 
 class SiteItem(BaseItem):
@@ -69,9 +64,7 @@ class SiteItem(BaseItem):
         self.status = None
         self.serviceStatus = None
         self.activationTime = None
-        for k, v in kwargs.items():
-            if hasattr(self, k):
-                setattr(self, k, v)
+        super(SiteItem, self).__init__(**kwargs)
 
 
 class SiteVersionItem(BaseItem):
@@ -79,9 +72,7 @@ class SiteVersionItem(BaseItem):
         self.componentVersion = None
         self.fateServingVersion = None
         self.fateVersion = None
-        for k, v in kwargs.items():
-            if hasattr(self, k):
-                setattr(self, k, v)
+        super(SiteVersionItem, self).__init__(**kwargs)
 
 
 class SiteSignatureItem(BaseItem):
@@ -90,9 +81,7 @@ class SiteSignatureItem(BaseItem):
         self.role = None
         self.appKey = None
         self.appSecret = None
-        for k, v in kwargs.items():
-            if hasattr(self, k):
-                setattr(self, k, v)
+        super(SiteSignatureItem, self).__init__(**kwargs)
 
 
 class InstitutionSignatureItem(BaseItem):
@@ -100,9 +89,7 @@ class InstitutionSignatureItem(BaseItem):
         self.fateManagerId = None
         self.appKey = None
         self.appSecret = None
-        for k, v in kwargs.items():
-            if hasattr(self, k):
-                setattr(self, k, v)
+        super(InstitutionSignatureItem, self).__init__(**kwargs)
 
 
 class OldSignatureItem(BaseItem):
@@ -111,6 +98,71 @@ class OldSignatureItem(BaseItem):
         self.role = None
         self.appKey = None
         self.appSecret = None
-        for k, v in kwargs.items():
-            if hasattr(self, k):
-                setattr(self, k, v)
+        super(OldSignatureItem, self).__init__(**kwargs)
+
+
+class MonitorBySite(BaseItem):
+    def __init__(self, **kwargs):
+        self.GuestPartyId = None
+        self.GuestSiteName = None
+        self.GuestInstitution = None
+        self.HostPartyId = None
+        self.HostSiteName = None
+        self.HostInstitution = None
+        super(MonitorBySite, self).__init__(**kwargs)
+
+
+class MonitorBase(BaseItem):
+    def __init__(self, **kwargs):
+        self.total = None
+        self.success = None
+        self.running = None
+        self.waiting = None
+        self.timeout = None
+        self.failed = None
+        self.canceled = None
+        super(MonitorBase, self).__init__(**kwargs)
+
+
+class JobBase(BaseItem):
+    def __init__(self, **kwargs):
+        self.total_jobs = None
+        self.success_jobs = None
+        self.success_percent = None
+        self.running_jobs = None
+        self.waiting_jobs = None
+        self.waiting_percent = None
+        self.timeout_jobs = None
+        self.timeout_percent = None
+        self.failed_jobs = None
+        self.failed_percent = None
+        super(JobBase, self).__init__(**kwargs)
+
+
+class SiteMonitorByRegion(BaseItem):
+    def __init__(self, **kwargs):
+        self.institution_site_name = None
+        self.institution = None
+        self.site_name = None
+        self.monitor_base = None
+        super(SiteMonitorByRegion, self).__init__(**kwargs)
+
+
+class MixSiteModeling(BaseItem):
+    def __init__(self, **kwargs):
+        self.site_name = None
+        self.job_base = None
+        super(MixSiteModeling, self).__init__(**kwargs)
+
+
+class FateVersionItem(BaseItem):
+    def __init__(self, **kwargs):
+        self.id = None
+        self.fate_version = None
+        self.product_type = None
+        self.chart_version = None
+        self.version_index = None
+        self.pull_status = None
+        self.package_status = None
+        super(FateVersionItem, self).__init__(**kwargs)
+
