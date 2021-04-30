@@ -35,6 +35,7 @@ import com.webank.ai.fatecloud.system.pojo.dto.RollSitePageDto;
 import com.webank.ai.fatecloud.system.pojo.qo.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -54,6 +55,12 @@ public class FederatedExchangeService implements Serializable {
 
     @Autowired
     PartyMapper partyMapper;
+
+    @Value(value = "${exchange.key}")
+    String exchangeKey;
+
+    @Value(value = "${exchange.partyId}")
+    String exchangePartyId;
 
     public boolean findRollSite(String network) {
         QueryWrapper<RollSiteDo> rollSiteDoQueryWrapper = new QueryWrapper<>();
@@ -187,7 +194,7 @@ public class FederatedExchangeService implements Serializable {
         String routerTableString;
 
         try {
-            Proxy.Packet exchange = ExchangeGrpcUtil.findExchange(network[0], Integer.parseInt(network[1]), "eggroll", "exchange", "get_route_table");
+            Proxy.Packet exchange = ExchangeGrpcUtil.findExchange(network[0], Integer.parseInt(network[1]), exchangeKey, exchangePartyId, "get_route_table");
 
             Proxy.Data body = exchange.getBody();
             ByteString value = body.getValue();
@@ -293,7 +300,7 @@ public class FederatedExchangeService implements Serializable {
             String[] network = rollSiteDo.getNetworkAccess().split(":");
             String grpcBody;
             try {
-                Proxy.Packet exchange = ExchangeGrpcUtil.findExchange(network[0], Integer.parseInt(network[1]), "eggroll", "exchange", "get_route_table");
+                Proxy.Packet exchange = ExchangeGrpcUtil.findExchange(network[0], Integer.parseInt(network[1]), exchangeKey, exchangePartyId, "get_route_table");
 
                 Proxy.Data body = exchange.getBody();
                 ByteString value = body.getValue();
@@ -584,7 +591,7 @@ public class FederatedExchangeService implements Serializable {
 
         //send grpc request
         String[] ipAndPort = network.split(":");
-        Proxy.Packet packet = ExchangeGrpcUtil.setExchange(ipAndPort[0], Integer.parseInt(ipAndPort[1]), "eggroll", routeTableJsonString, "exchange", "set_route_table");
+        Proxy.Packet packet = ExchangeGrpcUtil.setExchange(ipAndPort[0], Integer.parseInt(ipAndPort[1]), exchangeKey, routeTableJsonString, exchangePartyId, "set_route_table");
 
         Proxy.Data body = packet.getBody();
         ByteString value = body.getValue();
@@ -633,10 +640,8 @@ public class FederatedExchangeService implements Serializable {
                     status = "unpublished";
                 }
             }
-//            int size = partyDos.size();
             RollSitePageDto rollSitePageDto = new RollSitePageDto(rollSiteDo);
             rollSitePageDto.setStatus(status);
-//            rollSitePageDto.setCount(size);
             rollSitePageDtos.add(rollSitePageDto);
         }
 
@@ -646,13 +651,14 @@ public class FederatedExchangeService implements Serializable {
             //send grpc request
             String[] network = rollSitePageDto.getNetworkAccess().split(":");
             String routerTableString;
-
+            ArrayList<PartyDo> partyDos;
             try {
-                Proxy.Packet exchange = ExchangeGrpcUtil.findExchange(network[0], Integer.parseInt(network[1]), "eggroll", "exchange", "get_route_table");
+                Proxy.Packet exchange = ExchangeGrpcUtil.findExchange(network[0], Integer.parseInt(network[1]), exchangeKey, exchangePartyId, "get_route_table");
 
                 Proxy.Data body = exchange.getBody();
                 ByteString value = body.getValue();
                 routerTableString = value.toStringUtf8();
+                partyDos = buildPartyList(routerTableString);
 
             } catch (Exception e) {
                 log.error("update route table error by grpc ", e);
@@ -661,7 +667,6 @@ public class FederatedExchangeService implements Serializable {
                 continue;
             }
 
-            ArrayList<PartyDo> partyDos = buildPartyList(routerTableString);
 
             //get valid time in database
             QueryWrapper<PartyDo> partyDoQueryWrapper = new QueryWrapper<>();
